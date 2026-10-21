@@ -163,7 +163,7 @@ def check_opencode(path, served, host):
         note("PROBLEM", path, "could not be read: %s" % e)
         return
     # opencode merges several layers; this probe reads only the global file.
-    others = [v for v in ("OPENCODE_CONFIG", "OPENCODE_CONFIG_CONTENT") if os.environ.get(v)]
+    others = []
     d = os.getcwd()
     while True:
         for n in ("opencode.json", "opencode.jsonc", ".opencode/opencode.json", ".opencode/opencode.jsonc"):
