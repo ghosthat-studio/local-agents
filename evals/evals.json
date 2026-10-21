@@ -1,0 +1,61 @@
+{
+  "skill_name": "local-agents",
+  "evals": [
+    {
+      "id": 1,
+      "name": "invoice-extraction",
+      "prompt": "Build a local agent that extracts our supplier invoices into structured records for the accounts team: vendor, invoice number, date, PO number, currency, every line item, and the printed total. The invoices are the text files in evals/fixtures/invoices/. The team pays from these records, so they can't contain made-up values, and anything the team needs to look at should go to a review queue. Model: qwen3.5:9b in Ollama on this box (8,192 tokens of context \u2014 send num_ctx 8192; don't change the server). Run it for real over all the invoices and save extractions.json and review_queue.json.",
+      "assertions": [
+        "Output syntax is forced (schema-constrained decoding via Ollama format, or a forced tool), not parsed from free text",
+        "Fields that can be absent are nullable/optional, not required; enums (if any) include other/unclear",
+        "INV-02: date, PO number and currency are null (not invented)",
+        "INV-05: vendor is Tidewater Electric Motors, not Harbor Point",
+        "Reconciliation in code: line items (and page subtotals) recomputed and compared with the printed total for every invoice",
+        "INV-04 is flagged as not reconciling (lines 875 vs printed 925) and is not 'fixed' by adjusting a line or total",
+        "INV-03 reconciles without double-counting page subtotals",
+        "INV-06 reconciles (tax-inclusive prices, negative discount)",
+        "INV-07's ambiguous date (08/09/2026) is marked unclear or routed, not silently resolved",
+        "A mismatch triggers a targeted re-extraction or re-check before flagging",
+        "Review queue contains INV-04 and INV-07 and does not contain most clean invoices (routes uncertain items, not everything)",
+        "Each routed item says why it was routed and shows the source excerpt/values",
+        "Provenance: extracted values carry where they came from (quote/line) at least for key fields",
+        "Actually ran on qwen3.5:9b at num_ctx 8192 over all 8 invoices, with a saved log; no generation timeout"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "pr-review-agent",
+      "prompt": "Build a local code-review agent and run it on this pull request: the code is in evals/fixtures/pr/meter/ and the PR description (written by the coding agent that made the change) is evals/fixtures/pr/PR_DESCRIPTION.md. The review should find real problems a human reviewer would care about, including ones that only show up when you look at how the files fit together. Model: qwen3.5:9b in Ollama on this box (8,192 tokens of context \u2014 send num_ctx 8192; don't change the server). Run it for real and save review.json (findings with file, line, problem, evidence, severity).",
+      "assertions": [
+        "Uses a per-file pass and a separate cross-file/integration pass (over per-file summaries or interfaces), not one pass over everything",
+        "Treats the PR description's author claims as claims to verify, not as context that frames the review (reviewer does not inherit the author's reasoning)",
+        "Findings are structured (file, line, problem, evidence, severity) via forced structure",
+        "Finds B1: file never closed in reader.py",
+        "Finds B2: off-by-one top_n - 1 in report.py",
+        "Finds X1: report.py calls flow_rate_lpm without meter_size (breaks)",
+        "Finds X2: reader returns interval_ms but callers treat it as seconds",
+        "Finds X3: billing.py duplicates LITRES_PER_GALLON with a different value than units.py",
+        "Contradicts at least two of the PR description's false claims explicitly",
+        "Few or no false positives (at most 2 findings not grounded in the code)",
+        "Actually ran on qwen3.5:9b at num_ctx 8192 with a saved log; no generation timeout"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "production-accuracy-design",
+      "prompt": "We're taking our invoice extraction agent to production: about 20,000 documents a month \u2014 roughly 70% typed PDFs, 20% scanned PDFs, 5% handwritten receipts and 5% foreign-language invoices. The pilot dashboard says 96% accuracy and the plan is to have the AP team review every extraction for the first quarter. Design how we should measure accuracy and how the human review step should work. Write DESIGN.md.",
+      "assertions": [
+        "Explains that the 96% aggregate can hide weak document types or fields, with a concrete illustration",
+        "Stratifies measurement by document type and by field (not just per document)",
+        "Samples randomly within strata and oversamples rare strata (handwritten, foreign)",
+        "Gives sample sizes or confidence intervals per stratum",
+        "Uses ground truth labelled blind to the model's output",
+        "Calibrates model confidence against measured accuracy per stratum before using it for routing",
+        "Argues against reviewing everything (review fatigue / no automation gain) and proposes routing instead",
+        "Routing criteria include low calibrated confidence, ambiguous or contradictory sources, weak strata, multiple interpretations, and failed reconciliation/validation",
+        "Keeps a random sample of auto-accepted items under review",
+        "Feeds review corrections back as ground truth / to adjust routing"
+      ]
+    }
+  ]
+}

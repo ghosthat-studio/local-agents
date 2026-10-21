@@ -1,0 +1,12 @@
+NORTHWIND SUPPLY CO.
+Invoice No: NW-4471   Date: 2026-08-03   PO: 55120
+Bill to: Harbor Point Water Utility
+
+Qty  Description            Unit     Amount
+10   Gate valve 6in         $84.00   $840.00
+4    Valve box riser        $22.50   $90.00
+     Freight                          $45.00
+                          Subtotal   $975.00
+                          Tax 8%     $78.00
+                          TOTAL      $1,053.00
+Currency: USD

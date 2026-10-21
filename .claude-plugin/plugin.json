@@ -1,0 +1,19 @@
+{
+  "name": "local-agents",
+  "version": "1.0.0",
+  "description": "Build, run and debug agents on locally hosted models (Ollama, vLLM, llama.cpp, LM Studio, MLX) without starving the model of context, time, tools or reasons.",
+  "author": {
+    "name": "Ghost Hat Studio"
+  },
+  "homepage": "https://ghosthatstudio.com/toolbox/local-agents/",
+  "repository": "https://github.com/ghosthat-studio/local-agents",
+  "license": "MIT",
+  "keywords": [
+    "skill",
+    "local-models",
+    "ollama",
+    "vllm",
+    "llama.cpp",
+    "agents"
+  ]
+}
