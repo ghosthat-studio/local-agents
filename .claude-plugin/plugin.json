@@ -7,6 +7,10 @@
   },
   "homepage": "https://ghosthatstudio.com/toolbox/local-agents/",
   "repository": "https://github.com/ghosthat-studio/local-agents",
+  "documentationUrl": "https://github.com/ghosthat-studio/local-agents#readme",
+  "supportUrl": "https://github.com/ghosthat-studio/local-agents/issues",
+  "privacyPolicyUrl": "https://ghosthatstudio.com/privacy/",
+  "termsOfServiceUrl": "https://ghosthatstudio.com/terms/",
   "license": "MIT",
   "keywords": [
     "skill",
