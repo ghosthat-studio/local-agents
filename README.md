@@ -37,8 +37,15 @@ real model before calling the agent done.
 The skill is listed in the [Ghost Hat Studio plugin catalog](https://github.com/ghosthat-studio/marketplace).
 In a Claude Code session, add the catalog, then install the skill from it:
 
+Step 1:
+
 ```
 /plugin marketplace add ghosthat-studio/marketplace
+```
+
+Step 2:
+
+```
 /plugin install local-agents@ghosthat-studio
 ```
 
